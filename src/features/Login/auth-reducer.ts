@@ -9,6 +9,7 @@ import {
 import {LoginType} from "./login";
 import {authAPI} from "../../api/todolists-api";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
+import {ClearDataActionType, clearTodosDataAC} from "../TodolistsList/todolists-reducer";
 
 const initialState = {
     isLoggedIn: false
@@ -60,8 +61,7 @@ export const meTC = () => async (dispatch: Dispatch<ActionsType>) => {
     } catch (e) {
         const error = (e as { message: string })
         handleServerNetworkError(error, dispatch)
-    }
-    finally {
+    } finally {
         dispatch(setInitializedAC(true))
     }
 }
@@ -74,6 +74,7 @@ export const logOutTC = () => async (dispatch: Dispatch<ActionsType>) => {
         if (resul.data.resultCode === 0) {
             dispatch(setIsLoggedInAC(false))
             dispatch(setAppStatusAC('succeeded'))
+            dispatch(clearTodosDataAC())
         } else {
             handleServerAppError(resul.data, dispatch)
         }
@@ -89,3 +90,4 @@ type ActionsType =
     | SetAppStatusActionType
     | SetAppErrorActionType
     | SetInitializedActionType
+    | ClearDataActionType
